@@ -19,6 +19,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,34 +38,35 @@ import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
-import com.readystatesoftware.chuck.internal.data.LocalCupboard;
-import com.readystatesoftware.chuck.internal.support.FormatUtils;
-import com.readystatesoftware.chuck.internal.support.SimpleOnPageChangedListener;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
+import com.readystatesoftware.chuck.internal.support.ChuckFormatUtils;
+import com.readystatesoftware.chuck.internal.support.ChuckOnPageChangedListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.readystatesoftware.chuck.internal.ui.TransactionPayloadFragment.TYPE_REQUEST;
-import static com.readystatesoftware.chuck.internal.ui.TransactionPayloadFragment.TYPE_RESPONSE;
+import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_REQUEST;
+import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_RESPONSE;
 
-public class TransactionActivity extends BaseChuckActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ChuckTransactionActivity extends ChuckBaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_TRANSACTION_ID = "transaction_id";
 
     private static int selectedTabPosition = 0;
 
-    public static void start(Context context, long transactionId) {
-        Intent intent = new Intent(context, TransactionActivity.class);
-        intent.putExtra(ARG_TRANSACTION_ID, transactionId);
-        context.startActivity(intent);
-    }
+    private ChuckHttpTransaction transaction;
 
     TextView title;
     Adapter adapter;
 
     private long transactionId;
-    private HttpTransaction transaction;
+
+    public static void start(Context context, long transactionId) {
+        Intent intent = new Intent(context, ChuckTransactionActivity.class);
+        intent.putExtra(ARG_TRANSACTION_ID, transactionId);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,10 +108,10 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.share_text) {
-            share(FormatUtils.getShareText(this, transaction));
+            share(ChuckFormatUtils.getShareText(this, transaction));
             return true;
         } else if (item.getItemId() == R.id.share_curl) {
-            share(FormatUtils.getShareCurlCommand(transaction));
+            share(ChuckFormatUtils.getShareCurlCommand(transaction));
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -126,7 +127,7 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        transaction = LocalCupboard.getInstance().withCursor(data).get(HttpTransaction.class);
+        transaction = ChuckLocalCupboard.getInstance().withCursor(data).get(ChuckHttpTransaction.class);
         populateUI();
     }
 
@@ -145,11 +146,11 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new TransactionOverviewFragment(), getString(R.string.chuck_overview));
-        adapter.addFragment(TransactionPayloadFragment.newInstance(TYPE_REQUEST), getString(R.string.chuck_request));
-        adapter.addFragment(TransactionPayloadFragment.newInstance(TYPE_RESPONSE), getString(R.string.chuck_response));
+        adapter.addFragment(new ChuckTransactionOverviewFragment(), getString(R.string.chuck_overview));
+        adapter.addFragment(ChuckTransactionPayloadFragment.newInstance(TYPE_REQUEST), getString(R.string.chuck_request));
+        adapter.addFragment(ChuckTransactionPayloadFragment.newInstance(TYPE_RESPONSE), getString(R.string.chuck_response));
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new SimpleOnPageChangedListener() {
+        viewPager.addOnPageChangeListener(new ChuckOnPageChangedListener() {
             @Override
             public void onPageSelected(int position) {
                 selectedTabPosition = position;

@@ -28,18 +28,18 @@ import android.util.LongSparseArray;
 
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
-import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.ui.ChuckBaseActivity;
 
 import java.lang.reflect.Method;
 
-public class NotificationHelper {
+public class ChuckNotificationHelper {
 
     private static final String CHANNEL_ID = "chuck";
     private static final int NOTIFICATION_ID = 1138;
     private static final int BUFFER_SIZE = 10;
 
-    private static final LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
+    private static final LongSparseArray<ChuckHttpTransaction> transactionBuffer = new LongSparseArray<>();
     private static int transactionCount;
 
     private final Context context;
@@ -51,17 +51,7 @@ public class NotificationHelper {
         transactionCount = 0;
     }
 
-    private static synchronized void addToBuffer(HttpTransaction transaction) {
-        if (transaction.getStatus() == HttpTransaction.Status.Requested) {
-            transactionCount++;
-        }
-        transactionBuffer.put(transaction.getId(), transaction);
-        if (transactionBuffer.size() > BUFFER_SIZE) {
-            transactionBuffer.removeAt(0);
-        }
-    }
-
-    public NotificationHelper(Context context) {
+    public ChuckNotificationHelper(Context context) {
         this.context = context;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -74,9 +64,19 @@ public class NotificationHelper {
         }
     }
 
-    public synchronized void show(HttpTransaction transaction) {
+    private static synchronized void addToBuffer(ChuckHttpTransaction transaction) {
+        if (transaction.getStatus() == ChuckHttpTransaction.Status.Requested) {
+            transactionCount++;
+        }
+        transactionBuffer.put(transaction.getId(), transaction);
+        if (transactionBuffer.size() > BUFFER_SIZE) {
+            transactionBuffer.removeAt(0);
+        }
+    }
+
+    public synchronized void show(ChuckHttpTransaction transaction) {
         addToBuffer(transaction);
-        if (!BaseChuckActivity.isInForeground()) {
+        if (!ChuckBaseActivity.isInForeground()) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
                     .setLocalOnly(true)
@@ -112,7 +112,7 @@ public class NotificationHelper {
     @NonNull
     private NotificationCompat.Action getClearAction() {
         CharSequence clearTitle = context.getString(R.string.chuck_clear);
-        Intent deleteIntent = new Intent(context, ClearTransactionsService.class);
+        Intent deleteIntent = new Intent(context, ChuckClearTransactionsService.class);
         PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT);
         return new NotificationCompat.Action(R.drawable.chuck_ic_delete_white_24dp,
             clearTitle, intent);

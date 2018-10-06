@@ -15,12 +15,12 @@
  */
 package com.readystatesoftware.chuck.internal.data;
 
-public class HttpHeader {
+public class ChuckHttpHeader {
 
     private final String name;
     private final String value;
 
-    HttpHeader(String name, String value) {
+    ChuckHttpHeader(String name, String value) {
         this.name = name;
         this.value = value;
     }

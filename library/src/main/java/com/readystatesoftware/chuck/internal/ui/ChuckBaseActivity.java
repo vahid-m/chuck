@@ -19,13 +19,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.readystatesoftware.chuck.internal.support.NotificationHelper;
+import com.readystatesoftware.chuck.internal.support.ChuckNotificationHelper;
 
-public abstract class BaseChuckActivity extends AppCompatActivity {
+public abstract class ChuckBaseActivity extends AppCompatActivity {
 
     private static boolean inForeground;
 
-    private NotificationHelper notificationHelper;
+    private ChuckNotificationHelper notificationHelper;
 
     public static boolean isInForeground() {
         return inForeground;
@@ -34,7 +34,7 @@ public abstract class BaseChuckActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        notificationHelper = new NotificationHelper(this);
+        notificationHelper = new ChuckNotificationHelper(this);
     }
 
     @Override

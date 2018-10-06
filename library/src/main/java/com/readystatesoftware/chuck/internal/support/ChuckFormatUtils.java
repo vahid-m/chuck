@@ -18,11 +18,11 @@ package com.readystatesoftware.chuck.internal.support;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.HttpHeader;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.readystatesoftware.chuck.R;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpHeader;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 
 import org.xml.sax.InputSource;
 
@@ -38,12 +38,12 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
-public class FormatUtils {
+public class ChuckFormatUtils {
 
-    public static String formatHeaders(List<HttpHeader> httpHeaders, boolean withMarkup) {
+    public static String formatHeaders(List<ChuckHttpHeader> httpHeaders, boolean withMarkup) {
         String out = "";
         if (httpHeaders != null) {
-            for (HttpHeader header : httpHeaders) {
+            for (ChuckHttpHeader header : httpHeaders) {
                 out += ((withMarkup) ? "<b>" : "") + header.getName() + ": " + ((withMarkup) ? "</b>" : "") +
                         header.getValue() + ((withMarkup) ? "<br />" : "\n");
             }
@@ -63,7 +63,7 @@ public class FormatUtils {
         try {
             JsonParser jp = new JsonParser();
             JsonElement je = jp.parse(json);
-            return JsonConvertor.getInstance().toJson(je);
+            return ChuckJsonConverter.getInstance().toJson(je);
         } catch (Exception e) {
             return json;
         }
@@ -83,7 +83,7 @@ public class FormatUtils {
         }
     }
 
-    public static String getShareText(Context context, HttpTransaction transaction) {
+    public static String getShareText(Context context, ChuckHttpTransaction transaction) {
         String text = "";
         text += context.getString(R.string.chuck_url) + ": " + v(transaction.getUrl()) + "\n";
         text += context.getString(R.string.chuck_method) + ": " + v(transaction.getMethod()) + "\n";
@@ -118,11 +118,11 @@ public class FormatUtils {
         return text;
     }
 
-    public static String getShareCurlCommand(HttpTransaction transaction) {
+    public static String getShareCurlCommand(ChuckHttpTransaction transaction) {
         boolean compressed = false;
         String curlCmd = "curl";
         curlCmd += " -X " + transaction.getMethod();
-        List<HttpHeader> headers = transaction.getRequestHeaders();
+        List<ChuckHttpHeader> headers = transaction.getRequestHeaders();
         for (int i = 0, count = headers.size(); i < count; i++) {
             String name = headers.get(i).getName();
             String value = headers.get(i).getValue();

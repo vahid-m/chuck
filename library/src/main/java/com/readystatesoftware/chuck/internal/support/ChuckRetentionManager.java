@@ -10,7 +10,7 @@ import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class RetentionManager {
+public class ChuckRetentionManager {
 
     private static final String LOG_TAG = "Chuck";
     private static final String PREFS_NAME = "chuck_preferences";
@@ -23,7 +23,7 @@ public class RetentionManager {
     private final long cleanupFrequency;
     private final SharedPreferences prefs;
 
-    public RetentionManager(Context context, ChuckInterceptor.Period retentionPeriod) {
+    public ChuckRetentionManager(Context context, ChuckInterceptor.Period retentionPeriod) {
         this.context = context;
         period = toMillis(retentionPeriod);
         prefs = context.getSharedPreferences(PREFS_NAME, 0);

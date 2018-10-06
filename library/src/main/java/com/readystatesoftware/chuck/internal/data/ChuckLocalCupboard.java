@@ -18,12 +18,12 @@ package com.readystatesoftware.chuck.internal.data;
 import nl.qbusict.cupboard.Cupboard;
 import nl.qbusict.cupboard.CupboardBuilder;
 
-public class LocalCupboard {
+public class ChuckLocalCupboard {
 
     private static Cupboard cupboard;
 
     static {
-        getInstance().register(HttpTransaction.class);
+        getInstance().register(ChuckHttpTransaction.class);
     }
 
     public static Cupboard getInstance() {
@@ -39,6 +39,6 @@ public class LocalCupboard {
                 .build();
     }
 
-    private LocalCupboard() {
+    private ChuckLocalCupboard() {
     }
 }

@@ -26,7 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
-public class SQLiteUtils {
+public class ChuckSQLiteUtils {
 
     public static void browseDatabase(Context context) {
         if (isIntentResolvable(context, getSQLiteDebuggerAppIntent("/"))) {

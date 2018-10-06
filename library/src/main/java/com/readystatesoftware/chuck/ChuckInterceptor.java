@@ -21,10 +21,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
-import com.readystatesoftware.chuck.internal.data.LocalCupboard;
-import com.readystatesoftware.chuck.internal.support.NotificationHelper;
-import com.readystatesoftware.chuck.internal.support.RetentionManager;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
+import com.readystatesoftware.chuck.internal.support.ChuckNotificationHelper;
+import com.readystatesoftware.chuck.internal.support.ChuckRetentionManager;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -75,8 +75,8 @@ public final class ChuckInterceptor implements Interceptor {
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     private final Context context;
-    private final NotificationHelper notificationHelper;
-    private RetentionManager retentionManager;
+    private final ChuckNotificationHelper notificationHelper;
+    private ChuckRetentionManager retentionManager;
     private boolean showNotification;
     private long maxContentLength = 250000L;
 
@@ -85,9 +85,9 @@ public final class ChuckInterceptor implements Interceptor {
      */
     public ChuckInterceptor(Context context) {
         this.context = context.getApplicationContext();
-        notificationHelper = new NotificationHelper(this.context);
+        notificationHelper = new ChuckNotificationHelper(this.context);
         showNotification = true;
-        retentionManager = new RetentionManager(this.context, DEFAULT_RETENTION);
+        retentionManager = new ChuckRetentionManager(this.context, DEFAULT_RETENTION);
     }
 
     /**
@@ -121,7 +121,7 @@ public final class ChuckInterceptor implements Interceptor {
      * @return The {@link ChuckInterceptor} instance.
      */
     public ChuckInterceptor retainDataFor(Period period) {
-        retentionManager = new RetentionManager(context, period);
+        retentionManager = new ChuckRetentionManager(context, period);
         return this;
     }
 
@@ -131,7 +131,7 @@ public final class ChuckInterceptor implements Interceptor {
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
-        HttpTransaction transaction = new HttpTransaction();
+        ChuckHttpTransaction transaction = new ChuckHttpTransaction();
         transaction.setRequestDate(new Date());
 
         transaction.setMethod(request.method());
@@ -220,8 +220,8 @@ public final class ChuckInterceptor implements Interceptor {
         return response;
     }
 
-    private Uri create(HttpTransaction transaction) {
-        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
+    private Uri create(ChuckHttpTransaction transaction) {
+        ContentValues values = ChuckLocalCupboard.getInstance().withEntity(ChuckHttpTransaction.class).toContentValues(transaction);
         Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
         transaction.setId(Long.valueOf(uri.getLastPathSegment()));
         if (showNotification) {
@@ -231,8 +231,8 @@ public final class ChuckInterceptor implements Interceptor {
         return uri;
     }
 
-    private int update(HttpTransaction transaction, Uri uri) {
-        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
+    private int update(ChuckHttpTransaction transaction, Uri uri) {
+        ContentValues values = ChuckLocalCupboard.getInstance().withEntity(ChuckHttpTransaction.class).toContentValues(transaction);
         int updated = context.getContentResolver().update(uri, values, null, null);
         if (showNotification && updated > 0) {
             notificationHelper.show(transaction);

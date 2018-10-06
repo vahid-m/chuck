@@ -24,9 +24,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 
-public class TransactionOverviewFragment extends Fragment implements TransactionFragment {
+public class ChuckTransactionOverviewFragment extends Fragment implements TransactionFragment {
 
     TextView url;
     TextView method;
@@ -41,9 +41,9 @@ public class TransactionOverviewFragment extends Fragment implements Transaction
     TextView responseSize;
     TextView totalSize;
 
-    private HttpTransaction transaction;
+    private ChuckHttpTransaction transaction;
 
-    public TransactionOverviewFragment() {
+    public ChuckTransactionOverviewFragment() {
     }
 
     @Override
@@ -77,7 +77,7 @@ public class TransactionOverviewFragment extends Fragment implements Transaction
     }
 
     @Override
-    public void transactionUpdated(HttpTransaction transaction) {
+    public void transactionUpdated(ChuckHttpTransaction transaction) {
         this.transaction = transaction;
         populateUI();
     }

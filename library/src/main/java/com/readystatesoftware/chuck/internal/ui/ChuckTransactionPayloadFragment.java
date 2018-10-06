@@ -26,9 +26,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 
-public class TransactionPayloadFragment extends Fragment implements TransactionFragment {
+public class ChuckTransactionPayloadFragment extends Fragment implements TransactionFragment {
 
     public static final int TYPE_REQUEST = 0;
     public static final int TYPE_RESPONSE = 1;
@@ -39,13 +39,13 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     TextView body;
 
     private int type;
-    private HttpTransaction transaction;
+    private ChuckHttpTransaction transaction;
 
-    public TransactionPayloadFragment() {
+    public ChuckTransactionPayloadFragment() {
     }
 
-    public static TransactionPayloadFragment newInstance(int type) {
-        TransactionPayloadFragment fragment = new TransactionPayloadFragment();
+    public static ChuckTransactionPayloadFragment newInstance(int type) {
+        ChuckTransactionPayloadFragment fragment = new ChuckTransactionPayloadFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_TYPE, type);
         fragment.setArguments(b);
@@ -75,7 +75,7 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     }
 
     @Override
-    public void transactionUpdated(HttpTransaction transaction) {
+    public void transactionUpdated(ChuckHttpTransaction transaction) {
         this.transaction = transaction;
         populateUI();
     }

@@ -18,7 +18,7 @@ package com.readystatesoftware.chuck;
 import android.content.Context;
 import android.content.Intent;
 
-import com.readystatesoftware.chuck.internal.ui.MainActivity;
+import com.readystatesoftware.chuck.internal.ui.ChuckActivity;
 
 /**
  * Chuck utilities.
@@ -32,6 +32,6 @@ public class Chuck {
      * @return An Intent for the main Chuck Activity that can be started with {@link Context#startActivity(Intent)}.
      */
     public static Intent getLaunchIntent(Context context) {
-        return new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return new Intent(context, ChuckActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 }

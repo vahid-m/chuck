@@ -37,21 +37,22 @@ import android.view.ViewGroup;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
-import com.readystatesoftware.chuck.internal.support.NotificationHelper;
-import com.readystatesoftware.chuck.internal.support.SQLiteUtils;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.support.ChuckNotificationHelper;
+import com.readystatesoftware.chuck.internal.support.ChuckSQLiteUtils;
 
-public class TransactionListFragment extends Fragment implements
+public class ChuckTransactionListFragment extends Fragment implements
         SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private String currentFilter;
     private OnListFragmentInteractionListener listener;
     private TransactionAdapter adapter;
 
-    public TransactionListFragment() {}
+    public ChuckTransactionListFragment() {
+    }
 
-    public static TransactionListFragment newInstance() {
-        return new TransactionListFragment();
+    public static ChuckTransactionListFragment newInstance() {
+        return new ChuckTransactionListFragment();
     }
 
     @Override
@@ -113,10 +114,10 @@ public class TransactionListFragment extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.clear) {
             getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
-            NotificationHelper.clearBuffer();
+            ChuckNotificationHelper.clearBuffer();
             return true;
         } else if (item.getItemId() == R.id.browse_sql) {
-            SQLiteUtils.browseDatabase(getContext());
+            ChuckSQLiteUtils.browseDatabase(getContext());
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -136,7 +137,7 @@ public class TransactionListFragment extends Fragment implements
                 loader.setSelectionArgs(new String[]{ "%" + currentFilter + "%" });
             }
         }
-        loader.setProjection(HttpTransaction.PARTIAL_PROJECTION);
+        loader.setProjection(ChuckHttpTransaction.PARTIAL_PROJECTION);
         loader.setSortOrder("requestDate DESC");
         return loader;
     }
@@ -164,6 +165,6 @@ public class TransactionListFragment extends Fragment implements
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(HttpTransaction item);
+        void onListFragmentInteraction(ChuckHttpTransaction item);
     }
 }

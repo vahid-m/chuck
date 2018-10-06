@@ -6,17 +6,17 @@ import android.support.annotation.Nullable;
 
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 
-public class ClearTransactionsService extends IntentService {
+public class ChuckClearTransactionsService extends IntentService {
 
-    public ClearTransactionsService() {
+    public ChuckClearTransactionsService() {
         super("Chuck-ClearTransactionsService");
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
-        NotificationHelper.clearBuffer();
-        NotificationHelper notificationHelper = new NotificationHelper(this);
+        ChuckNotificationHelper.clearBuffer();
+        ChuckNotificationHelper notificationHelper = new ChuckNotificationHelper(this);
         notificationHelper.dismiss();
     }
 }

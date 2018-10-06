@@ -30,11 +30,11 @@ class ChuckDbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        LocalCupboard.getAnnotatedInstance().withDatabase(db).createTables();
+        ChuckLocalCupboard.getAnnotatedInstance().withDatabase(db).createTables();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        LocalCupboard.getAnnotatedInstance().withDatabase(db).upgradeTables();
+        ChuckLocalCupboard.getAnnotatedInstance().withDatabase(db).upgradeTables();
     }
 }

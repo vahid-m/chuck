@@ -17,7 +17,7 @@ package com.readystatesoftware.chuck.internal.support;
 
 import android.support.v4.view.ViewPager;
 
-public abstract class SimpleOnPageChangedListener implements ViewPager.OnPageChangeListener {
+public abstract class ChuckOnPageChangedListener implements ViewPager.OnPageChangeListener {
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
     @Override

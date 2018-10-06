@@ -15,6 +15,7 @@
  ~ limitations under the License.
  -->
 <resources>
+    <public name="chuck_name" type="string" />
     <string name="chuck_name">Chuck</string>
     <string name="chuck_notification_title">Recording HTTP activity</string>
     <string name="chuck_clear">Clear</string>

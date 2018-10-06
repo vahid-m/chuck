@@ -15,8 +15,8 @@
  */
 package com.readystatesoftware.chuck.internal.ui;
 
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 
 interface TransactionFragment {
-    void transactionUpdated(HttpTransaction transaction);
+    void transactionUpdated(ChuckHttpTransaction transaction);
 }

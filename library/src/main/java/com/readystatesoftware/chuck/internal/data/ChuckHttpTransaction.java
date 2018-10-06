@@ -18,8 +18,8 @@ package com.readystatesoftware.chuck.internal.data;
 import android.net.Uri;
 
 import com.google.gson.reflect.TypeToken;
-import com.readystatesoftware.chuck.internal.support.FormatUtils;
-import com.readystatesoftware.chuck.internal.support.JsonConvertor;
+import com.readystatesoftware.chuck.internal.support.ChuckFormatUtils;
+import com.readystatesoftware.chuck.internal.support.ChuckJsonConverter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.Locale;
 import nl.qbusict.cupboard.annotation.Index;
 import okhttp3.Headers;
 
-public class HttpTransaction {
+public class ChuckHttpTransaction {
 
     public enum Status {
         Requested,
@@ -254,34 +254,36 @@ public class HttpTransaction {
         setRequestHeaders(toHttpHeaderList(headers));
     }
 
-    public void setRequestHeaders(List<HttpHeader> headers) {
-        requestHeaders = JsonConvertor.getInstance().toJson(headers);
+    public List<ChuckHttpHeader> getRequestHeaders() {
+        return ChuckJsonConverter.getInstance().fromJson(requestHeaders,
+                new TypeToken<List<ChuckHttpHeader>>() {
+                }.getType());
     }
 
-    public List<HttpHeader> getRequestHeaders() {
-        return JsonConvertor.getInstance().fromJson(requestHeaders,
-                new TypeToken<List<HttpHeader>>(){}.getType());
+    public void setRequestHeaders(List<ChuckHttpHeader> headers) {
+        requestHeaders = ChuckJsonConverter.getInstance().toJson(headers);
     }
 
     public String getRequestHeadersString(boolean withMarkup) {
-        return FormatUtils.formatHeaders(getRequestHeaders(), withMarkup);
+        return ChuckFormatUtils.formatHeaders(getRequestHeaders(), withMarkup);
     }
 
     public void setResponseHeaders(Headers headers) {
         setResponseHeaders(toHttpHeaderList(headers));
     }
 
-    public void setResponseHeaders(List<HttpHeader> headers) {
-        responseHeaders = JsonConvertor.getInstance().toJson(headers);
+    public List<ChuckHttpHeader> getResponseHeaders() {
+        return ChuckJsonConverter.getInstance().fromJson(responseHeaders,
+                new TypeToken<List<ChuckHttpHeader>>() {
+                }.getType());
     }
 
-    public List<HttpHeader> getResponseHeaders() {
-        return JsonConvertor.getInstance().fromJson(responseHeaders,
-                new TypeToken<List<HttpHeader>>(){}.getType());
+    public void setResponseHeaders(List<ChuckHttpHeader> headers) {
+        responseHeaders = ChuckJsonConverter.getInstance().toJson(headers);
     }
 
     public String getResponseHeadersString(boolean withMarkup) {
-        return FormatUtils.formatHeaders(getResponseHeaders(), withMarkup);
+        return ChuckFormatUtils.formatHeaders(getResponseHeaders(), withMarkup);
     }
 
     public Status getStatus() {
@@ -349,25 +351,25 @@ public class HttpTransaction {
         return scheme.toLowerCase().equals("https");
     }
 
-    private List<HttpHeader> toHttpHeaderList(Headers headers) {
-        List<HttpHeader> httpHeaders = new ArrayList<>();
+    private List<ChuckHttpHeader> toHttpHeaderList(Headers headers) {
+        List<ChuckHttpHeader> httpHeaders = new ArrayList<>();
         for (int i = 0, count = headers.size(); i < count; i++) {
-            httpHeaders.add(new HttpHeader(headers.name(i), headers.value(i)));
+            httpHeaders.add(new ChuckHttpHeader(headers.name(i), headers.value(i)));
         }
         return httpHeaders;
     }
 
     private String formatBody(String body, String contentType) {
         if (contentType != null && contentType.toLowerCase().contains("json")) {
-            return FormatUtils.formatJson(body);
+            return ChuckFormatUtils.formatJson(body);
         } else if (contentType != null && contentType.toLowerCase().contains("xml")) {
-            return FormatUtils.formatXml(body);
+            return ChuckFormatUtils.formatXml(body);
         } else {
             return body;
         }
     }
 
     private String formatBytes(long bytes) {
-        return FormatUtils.formatByteCount(bytes, true);
+        return ChuckFormatUtils.formatByteCount(bytes, true);
     }
 }

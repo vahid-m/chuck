@@ -22,8 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.readystatesoftware.chuck.Chuck;
-import com.readystatesoftware.chuck.ChuckInterceptor;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -51,11 +51,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private OkHttpClient getClient(Context context) {
-        return new OkHttpClient.Builder()
-                // Add a ChuckInterceptor instance to your OkHttp client
-                .addInterceptor(new ChuckInterceptor(context))
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build();
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        // Add a ChuckInterceptor instance to your OkHttp client
+        try {
+            Interceptor interceptor =
+                    (Interceptor) Class.forName("com.readystatesoftware.chuck.ChuckInterceptor")
+                            .getConstructor(Context.class)
+                            .newInstance(context);
+            client.addInterceptor(interceptor);
+        } catch (Exception e) {
+            // ignore
+        }
+        client.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        return client.build();
     }
 
     private void launchChuckDirectly() {
@@ -66,8 +74,14 @@ public class MainActivity extends AppCompatActivity {
     private void doHttpActivity() {
         SampleApiService.HttpbinApi api = SampleApiService.getInstance(getClient(this));
         Callback<Void> cb = new Callback<Void>() {
-            @Override public void onResponse(Call call, Response response) {}
-            @Override public void onFailure(Call call, Throwable t) { t.printStackTrace(); }
+            @Override
+            public void onResponse(Call call, Response response) {
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                t.printStackTrace();
+            }
         };
         api.get().enqueue(cb);
         api.post(new SampleApiService.Data("posted")).enqueue(cb);

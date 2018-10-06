@@ -21,9 +21,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 
-public class MainActivity extends BaseChuckActivity implements TransactionListFragment.OnListFragmentInteractionListener {
+public class ChuckActivity extends ChuckBaseActivity implements ChuckTransactionListFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,14 +34,14 @@ public class MainActivity extends BaseChuckActivity implements TransactionListFr
         toolbar.setSubtitle(getApplicationName());
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, TransactionListFragment.newInstance())
+                    .add(R.id.container, ChuckTransactionListFragment.newInstance())
                     .commit();
         }
     }
 
     @Override
-    public void onListFragmentInteraction(HttpTransaction transaction) {
-        TransactionActivity.start(this, transaction.getId());
+    public void onListFragmentInteraction(ChuckHttpTransaction transaction) {
+        ChuckTransactionActivity.start(this, transaction.getId());
     }
 
     private String getApplicationName() {
