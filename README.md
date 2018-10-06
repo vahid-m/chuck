@@ -1,5 +1,7 @@
-Chuck
-=====
+#Chuck(json highlight)
+[![Release](https://jitpack.io/v/RomanTsarou/chuck.svg)](https://jitpack.io/#RomanTsarou/chuck)
+
+####Fork with json highlight and hidden chuck library resources.
 
 Chuck is a simple in-app HTTP inspector for Android OkHttp clients. Chuck intercepts and persists all HTTP requests and responses inside your application, and provides a UI for inspecting their content.
 
@@ -18,21 +20,33 @@ Chuck requires Android 4.1+ and OkHttp 3.x.
 Setup
 -----
 
-Add the dependency in your `build.gradle` file. Add it alongside the `no-op` variant to isolate Chuck from release builds as follows:
+Add the dependency in your `build.gradle` file:
 
 ```gradle
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
  dependencies {
-   debugCompile 'com.readystatesoftware.chuck:library:1.1.0'
-   releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+   debugImplementation 'com.github.RomanTsarou:chuck:1.1.1'
  }
 ```
 
 In your application code, create an instance of `ChuckInterceptor` (you'll need to provide it with a `Context`, because Android) and add it as an interceptor when building your OkHttp client:
 
 ```java
-OkHttpClient client = new OkHttpClient.Builder()
-  .addInterceptor(new ChuckInterceptor(context))
-  .build();
+OkHttpClient client = new OkHttpClient.Builder();
+ if (BuildConfig.DEBUG) {
+            try {
+                Interceptor interceptor =
+                        (Interceptor) Class.forName("com.readystatesoftware.chuck.ChuckInterceptor")
+                                .getConstructor(Context.class)
+                                .newInstance(context);
+                client.addInterceptor(interceptor);
+            } catch (Exception e) {
+                // ignore
+            }
+        }
 ```
 
 That's it! Chuck will now record all HTTP interactions made by your OkHttp client. You can optionally disable the notification by calling `showNotification(false)` on the interceptor instance, and launch the Chuck UI directly within your app with the intent from `Chuck.getLaunchIntent()`.
@@ -54,6 +68,11 @@ Chuck uses the following open source libraries:
 - [OkHttp](https://github.com/square/okhttp) - Copyright Square, Inc.
 - [Gson](https://github.com/google/gson) - Copyright Google Inc.
 - [Cupboard](https://bitbucket.org/littlerobots/cupboard) - Copyright Little Robots.
+
+This fork also use:
+
+- [renderscript](https://github.com/caldwell/renderjson) - Copyright David Caldwell
+
 
 License
 -------

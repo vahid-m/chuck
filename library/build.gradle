@@ -1,3 +1,6 @@
+plugins {
+    id "com.github.dcendents.android-maven" version "2.1"
+}
 apply plugin: 'com.android.library'
 
 android {
@@ -11,10 +14,10 @@ android {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile "com.squareup.okhttp3:okhttp:$okhttp3Version"
-    compile 'nl.qbusict:cupboard:2.2.0'
-    compile "com.android.support:design:$supportLibVersion"
+    compileOnly 'com.google.code.gson:gson:2.8.5'
+    compileOnly "com.squareup.okhttp3:okhttp:$okhttp3Version"
+    api 'nl.qbusict:cupboard:2.2.0'
+    api "com.android.support:design:$supportLibVersion"
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
