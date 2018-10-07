@@ -1,6 +1,7 @@
 # Chuck(json highlight)
 #### Fork with json highlight and hidden chuck library resources.
 [![Release](https://jitpack.io/v/RomanTsarou/chuck.svg)](https://jitpack.io/#RomanTsarou/chuck)
+
 ![Json highlight](assets/json_highlight.jpg)
 Chuck is a simple in-app HTTP inspector for Android OkHttp clients. Chuck intercepts and persists all HTTP requests and responses inside your application, and provides a UI for inspecting their content.
 
@@ -27,7 +28,7 @@ repositories {
 }
 
  dependencies {
-   debugImplementation 'com.github.RomanTsarou:chuck:1.1.1'
+   debugImplementation 'com.github.RomanTsarou:chuck:1.1.2'
  }
 ```
 
