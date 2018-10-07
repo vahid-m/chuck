@@ -41,7 +41,6 @@ import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
 import com.readystatesoftware.chuck.internal.support.ChuckFormatUtils;
-import com.readystatesoftware.chuck.internal.support.ChuckOnPageChangedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +149,8 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
         adapter.addFragment(ChuckTransactionPayloadFragment.newInstance(TYPE_REQUEST), getString(R.string.chuck_request));
         adapter.addFragment(ChuckTransactionPayloadFragment.newInstance(TYPE_RESPONSE), getString(R.string.chuck_response));
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new ChuckOnPageChangedListener() {
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 selectedTabPosition = position;

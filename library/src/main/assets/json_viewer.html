@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8"/>
+    <title>Json Viewer</title>
+    <style>
+a:link { background-color: rgba(0,0,0,0.05);
+		color: grey;font-size: 80%;
+		padding-right: 4px; 
+		padding-left: 4px; 
+		}
+.renderjson a              { text-decoration: none; }
+.renderjson .disclosure    { color: grey; 
+							padding-right: 4px;
+							 background-color: rgba(0,0,0,0);
+                             font-size: 100%; }
+.renderjson .syntax        { color: black; }
+.renderjson .string        { color: #008000;font-weight: bold; }
+.renderjson .number        { color: blue; }
+.renderjson .boolean       { color: #000080;font-weight: bold; }
+.renderjson .key           { color: black; }
+.renderjson .keyword       { color: #000080; }
+.renderjson .object.syntax { color: black; }
+.renderjson .array.syntax  { color: black; }
+.raw {
+    border:#a0a0c0 1px solid;
+    background:#e8faff;
+    color:black;
+    padding:8px;
+    white-space: pre-wrap;
+}
+
+    </style>
+</head>
+
+<body>
+<pre id="headers" class="headers"></pre>
+<div id="json"></div>
+<br>
+<!--<br>-->
+<!--<br>-->
+<!--<details>-->
+<!--<summary id="summary">Raw</summary>-->
+<pre class="raw"><code id="raw"></code></pre>
+<!--</details>-->
+
+<script type="text/javascript" src="renderjson.js"></script>
+<script>
+function htmlEscape(s) {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+var headers =window.android.getHeaders();
+var raw =window.android.getRaw();
+document.getElementById("headers").innerHTML = headers;
+document.getElementById("raw").innerHTML = htmlEscape(raw);
+var obj=JSON.parse(raw);
+    document.getElementById("json").appendChild(
+        renderjson.set_show_to_level(1)(obj)
+    );
+
+</script>
+
+</body>
+</html>

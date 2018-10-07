@@ -15,15 +15,16 @@
  */
 package com.readystatesoftware.chuck.internal.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
@@ -35,8 +36,7 @@ public class ChuckTransactionPayloadFragment extends Fragment implements Transac
 
     private static final String ARG_TYPE = "type";
 
-    TextView headers;
-    TextView body;
+    WebView webView;
 
     private int type;
     private ChuckHttpTransaction transaction;
@@ -59,19 +59,31 @@ public class ChuckTransactionPayloadFragment extends Fragment implements Transac
         setRetainInstance(true);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.chuck_fragment_transaction_payload, container, false);
-        headers = (TextView) view.findViewById(R.id.headers);
-        body = (TextView) view.findViewById(R.id.body);
-        return view;
-    }
+    private boolean isLoaded;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         populateUI();
+    }
+
+    private String headers, raw;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.chuck_fragment_transaction_payload, container, false);
+        webView = view.findViewById(R.id.webView);
+        webView.setBackgroundColor(Color.TRANSPARENT);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new JavaScriptInterface(), "android");
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isLoaded = false;
     }
 
     @Override
@@ -84,24 +96,36 @@ public class ChuckTransactionPayloadFragment extends Fragment implements Transac
         if (isAdded() && transaction != null) {
             switch (type) {
                 case TYPE_REQUEST:
-                    setText(transaction.getRequestHeadersString(true),
-                            transaction.getFormattedRequestBody(), transaction.requestBodyIsPlainText());
+                    headers = transaction.getRequestHeadersString(true);
+                    raw = transaction.requestBodyIsPlainText()
+                            ? transaction.getRequestBody() : getString(R.string.chuck_body_omitted);
                     break;
                 case TYPE_RESPONSE:
-                    setText(transaction.getResponseHeadersString(true),
-                            transaction.getFormattedResponseBody(), transaction.responseBodyIsPlainText());
+                    headers = transaction.getResponseHeadersString(true);
+                    raw = transaction.responseBodyIsPlainText()
+                            ? transaction.getResponseBody() : getString(R.string.chuck_body_omitted);
                     break;
+            }
+            if (isLoaded) {
+                webView.reload();
+            } else {
+                webView.loadUrl("file:///android_asset/json_viewer.html");
+                isLoaded = true;
             }
         }
     }
 
-    private void setText(String headersString, String bodyString, boolean isPlainText) {
-        headers.setVisibility((TextUtils.isEmpty(headersString) ? View.GONE : View.VISIBLE));
-        headers.setText(Html.fromHtml(headersString));
-        if (!isPlainText) {
-            body.setText(getString(R.string.chuck_body_omitted));
-        } else {
-            body.setText(bodyString);
+    @Keep
+    private class JavaScriptInterface {
+
+        @JavascriptInterface
+        public String getHeaders() {
+            return headers;
+        }
+
+        @JavascriptInterface
+        public String getRaw() {
+            return raw;
         }
     }
 }
