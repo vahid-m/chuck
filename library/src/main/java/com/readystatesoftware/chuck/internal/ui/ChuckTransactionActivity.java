@@ -38,8 +38,8 @@ import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.support.ChuckFormatUtils;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
 
     private static int selectedTabPosition = 0;
 
-    private ChuckHttpTransaction transaction;
+    private HttpTransaction transaction;
 
     TextView title;
     Adapter adapter;
@@ -126,7 +126,7 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        transaction = ChuckLocalCupboard.getInstance().withCursor(data).get(ChuckHttpTransaction.class);
+        transaction = ChuckLocalCupboard.getInstance().withCursor(data).get(HttpTransaction.class);
         populateUI();
     }
 

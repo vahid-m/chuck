@@ -23,7 +23,7 @@ public class ChuckLocalCupboard {
     private static Cupboard cupboard;
 
     static {
-        getInstance().register(ChuckHttpTransaction.class);
+        getInstance().register(HttpTransaction.class);
     }
 
     public static Cupboard getInstance() {

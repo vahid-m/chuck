@@ -21,7 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 
 public class ChuckActivity extends ChuckBaseActivity implements ChuckTransactionListFragment.OnListFragmentInteractionListener {
 
@@ -40,7 +40,7 @@ public class ChuckActivity extends ChuckBaseActivity implements ChuckTransaction
     }
 
     @Override
-    public void onListFragmentInteraction(ChuckHttpTransaction transaction) {
+    public void onListFragmentInteraction(HttpTransaction transaction) {
         ChuckTransactionActivity.start(this, transaction.getId());
     }
 

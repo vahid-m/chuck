@@ -60,14 +60,14 @@ public class ChuckContentProvider extends ContentProvider {
         Cursor cursor = null;
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                cursor = ChuckLocalCupboard.getInstance().withDatabase(db).query(ChuckHttpTransaction.class).
+                cursor = ChuckLocalCupboard.getInstance().withDatabase(db).query(HttpTransaction.class).
                         withProjection(projection).
                         withSelection(selection, selectionArgs).
                         orderBy(sortOrder).
                         getCursor();
                 break;
             case TRANSACTION:
-                cursor = ChuckLocalCupboard.getInstance().withDatabase(db).query(ChuckHttpTransaction.class).
+                cursor = ChuckLocalCupboard.getInstance().withDatabase(db).query(HttpTransaction.class).
                         byId(ContentUris.parseId(uri)).
                         getCursor();
                 break;
@@ -90,7 +90,7 @@ public class ChuckContentProvider extends ContentProvider {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                long id = db.insert(ChuckLocalCupboard.getInstance().getTable(ChuckHttpTransaction.class), null, contentValues);
+                long id = db.insert(ChuckLocalCupboard.getInstance().getTable(HttpTransaction.class), null, contentValues);
                 if (id > 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                     return ContentUris.withAppendedId(TRANSACTION_URI, id);
@@ -105,10 +105,10 @@ public class ChuckContentProvider extends ContentProvider {
         int result = 0;
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                result = db.delete(ChuckLocalCupboard.getInstance().getTable(ChuckHttpTransaction.class), selection, selectionArgs);
+                result = db.delete(ChuckLocalCupboard.getInstance().getTable(HttpTransaction.class), selection, selectionArgs);
                 break;
             case TRANSACTION:
-                result = db.delete(ChuckLocalCupboard.getInstance().getTable(ChuckHttpTransaction.class),
+                result = db.delete(ChuckLocalCupboard.getInstance().getTable(HttpTransaction.class),
                         "_id = ?", new String[]{ uri.getPathSegments().get(1) });
                 break;
         }
@@ -125,10 +125,10 @@ public class ChuckContentProvider extends ContentProvider {
         int result = 0;
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                result = db.update(ChuckLocalCupboard.getInstance().getTable(ChuckHttpTransaction.class), contentValues, selection, selectionArgs);
+                result = db.update(ChuckLocalCupboard.getInstance().getTable(HttpTransaction.class), contentValues, selection, selectionArgs);
                 break;
             case TRANSACTION:
-                result = db.update(ChuckLocalCupboard.getInstance().getTable(ChuckHttpTransaction.class), contentValues,
+                result = db.update(ChuckLocalCupboard.getInstance().getTable(HttpTransaction.class), contentValues,
                         "_id = ?", new String[]{ uri.getPathSegments().get(1) });
                 break;
         }

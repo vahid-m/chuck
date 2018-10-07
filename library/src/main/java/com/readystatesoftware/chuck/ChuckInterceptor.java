@@ -21,8 +21,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.support.ChuckNotificationHelper;
 import com.readystatesoftware.chuck.internal.support.ChuckRetentionManager;
 
@@ -131,7 +131,7 @@ public final class ChuckInterceptor implements Interceptor {
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
-        ChuckHttpTransaction transaction = new ChuckHttpTransaction();
+        HttpTransaction transaction = new HttpTransaction();
         transaction.setRequestDate(new Date());
 
         transaction.setMethod(request.method());
@@ -220,8 +220,8 @@ public final class ChuckInterceptor implements Interceptor {
         return response;
     }
 
-    private Uri create(ChuckHttpTransaction transaction) {
-        ContentValues values = ChuckLocalCupboard.getInstance().withEntity(ChuckHttpTransaction.class).toContentValues(transaction);
+    private Uri create(HttpTransaction transaction) {
+        ContentValues values = ChuckLocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
         transaction.setId(Long.valueOf(uri.getLastPathSegment()));
         if (showNotification) {
@@ -231,8 +231,8 @@ public final class ChuckInterceptor implements Interceptor {
         return uri;
     }
 
-    private int update(ChuckHttpTransaction transaction, Uri uri) {
-        ContentValues values = ChuckLocalCupboard.getInstance().withEntity(ChuckHttpTransaction.class).toContentValues(transaction);
+    private int update(HttpTransaction transaction, Uri uri) {
+        ContentValues values = ChuckLocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         int updated = context.getContentResolver().update(uri, values, null, null);
         if (showNotification && updated > 0) {
             notificationHelper.show(transaction);

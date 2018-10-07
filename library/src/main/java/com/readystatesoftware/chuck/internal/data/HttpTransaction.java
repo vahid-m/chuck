@@ -30,7 +30,7 @@ import java.util.Locale;
 import nl.qbusict.cupboard.annotation.Index;
 import okhttp3.Headers;
 
-public class ChuckHttpTransaction {
+public class HttpTransaction {
 
     public enum Status {
         Requested,

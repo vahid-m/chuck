@@ -37,7 +37,7 @@ import android.view.ViewGroup;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.support.ChuckNotificationHelper;
 import com.readystatesoftware.chuck.internal.support.ChuckSQLiteUtils;
 
@@ -137,7 +137,7 @@ public class ChuckTransactionListFragment extends Fragment implements
                 loader.setSelectionArgs(new String[]{ "%" + currentFilter + "%" });
             }
         }
-        loader.setProjection(ChuckHttpTransaction.PARTIAL_PROJECTION);
+        loader.setProjection(HttpTransaction.PARTIAL_PROJECTION);
         loader.setSortOrder("requestDate DESC");
         return loader;
     }
@@ -165,6 +165,6 @@ public class ChuckTransactionListFragment extends Fragment implements
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(ChuckHttpTransaction item);
+        void onListFragmentInteraction(HttpTransaction item);
     }
 }

@@ -28,7 +28,7 @@ import android.util.LongSparseArray;
 
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.ui.ChuckBaseActivity;
 
 import java.lang.reflect.Method;
@@ -39,7 +39,7 @@ public class ChuckNotificationHelper {
     private static final int NOTIFICATION_ID = 1138;
     private static final int BUFFER_SIZE = 10;
 
-    private static final LongSparseArray<ChuckHttpTransaction> transactionBuffer = new LongSparseArray<>();
+    private static final LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
     private static int transactionCount;
 
     private final Context context;
@@ -64,8 +64,8 @@ public class ChuckNotificationHelper {
         }
     }
 
-    private static synchronized void addToBuffer(ChuckHttpTransaction transaction) {
-        if (transaction.getStatus() == ChuckHttpTransaction.Status.Requested) {
+    private static synchronized void addToBuffer(HttpTransaction transaction) {
+        if (transaction.getStatus() == HttpTransaction.Status.Requested) {
             transactionCount++;
         }
         transactionBuffer.put(transaction.getId(), transaction);
@@ -74,7 +74,7 @@ public class ChuckNotificationHelper {
         }
     }
 
-    public synchronized void show(ChuckHttpTransaction transaction) {
+    public synchronized void show(HttpTransaction transaction) {
         addToBuffer(transaction);
         if (!ChuckBaseActivity.isInForeground()) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)

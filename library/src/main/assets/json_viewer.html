@@ -30,6 +30,7 @@ a:link { background-color: rgba(0,0,0,0.05);
     color:black;
     padding:8px;
     white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
     </style>
@@ -43,7 +44,7 @@ a:link { background-color: rgba(0,0,0,0.05);
 <!--<br>-->
 <!--<details>-->
 <!--<summary id="summary">Raw</summary>-->
-<pre class="raw"><code id="raw"></code></pre>
+<pre class="raw" id="raw"></pre>
 <!--</details>-->
 
 <script type="text/javascript" src="renderjson.js"></script>
@@ -55,8 +56,8 @@ function htmlEscape(s) {
       .replace(/>/g, '&gt;');
   }
 
-var headers =window.android.getHeaders();
-var raw =window.android.getRaw();
+var headers = window.android.getHeaders();
+var raw = window.android.getRaw();
 document.getElementById("headers").innerHTML = headers;
 document.getElementById("raw").innerHTML = htmlEscape(raw);
 var obj=JSON.parse(raw);

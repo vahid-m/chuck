@@ -27,7 +27,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 
 public class ChuckTransactionPayloadFragment extends Fragment implements TransactionFragment {
 
@@ -39,7 +39,7 @@ public class ChuckTransactionPayloadFragment extends Fragment implements Transac
     WebView webView;
 
     private int type;
-    private ChuckHttpTransaction transaction;
+    private HttpTransaction transaction;
 
     public ChuckTransactionPayloadFragment() {
     }
@@ -87,7 +87,7 @@ public class ChuckTransactionPayloadFragment extends Fragment implements Transac
     }
 
     @Override
-    public void transactionUpdated(ChuckHttpTransaction transaction) {
+    public void transactionUpdated(HttpTransaction transaction) {
         this.transaction = transaction;
         populateUI();
     }

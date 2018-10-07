@@ -27,8 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
 import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.ui.ChuckTransactionListFragment.OnListFragmentInteractionListener;
 
 class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
@@ -65,13 +65,13 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
 
             @Override
             public void bindView(View view, final Context context, Cursor cursor) {
-                final ChuckHttpTransaction transaction = ChuckLocalCupboard.getInstance().withCursor(cursor).get(ChuckHttpTransaction.class);
+                final HttpTransaction transaction = ChuckLocalCupboard.getInstance().withCursor(cursor).get(HttpTransaction.class);
                 final ViewHolder holder = (ViewHolder) view.getTag();
                 holder.path.setText(transaction.getMethod() + " " + transaction.getPath());
                 holder.host.setText(transaction.getHost());
                 holder.start.setText(transaction.getRequestStartTimeString());
                 holder.ssl.setVisibility(transaction.isSsl() ? View.VISIBLE : View.GONE);
-                if (transaction.getStatus() == ChuckHttpTransaction.Status.Complete) {
+                if (transaction.getStatus() == HttpTransaction.Status.Complete) {
                     holder.code.setText(String.valueOf(transaction.getResponseCode()));
                     holder.duration.setText(transaction.getDurationString());
                     holder.size.setText(transaction.getTotalSizeString());
@@ -80,7 +80,7 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
                     holder.duration.setText(null);
                     holder.size.setText(null);
                 }
-                if (transaction.getStatus() == ChuckHttpTransaction.Status.Failed) {
+                if (transaction.getStatus() == HttpTransaction.Status.Failed) {
                     holder.code.setText("!!!");
                 }
                 setStatusColor(holder, transaction);
@@ -95,11 +95,11 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
                 });
             }
 
-            private void setStatusColor(ViewHolder holder, ChuckHttpTransaction transaction) {
+            private void setStatusColor(ViewHolder holder, HttpTransaction transaction) {
                 int color;
-                if (transaction.getStatus() == ChuckHttpTransaction.Status.Failed) {
+                if (transaction.getStatus() == HttpTransaction.Status.Failed) {
                     color = colorError;
-                } else if (transaction.getStatus() == ChuckHttpTransaction.Status.Requested) {
+                } else if (transaction.getStatus() == HttpTransaction.Status.Requested) {
                     color = colorRequested;
                 } else if (transaction.getResponseCode() >= 500) {
                     color = color500;
@@ -147,7 +147,7 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
         public final TextView duration;
         public final TextView size;
         public final ImageView ssl;
-        ChuckHttpTransaction transaction;
+        HttpTransaction transaction;
 
         ViewHolder(View view) {
             super(view);

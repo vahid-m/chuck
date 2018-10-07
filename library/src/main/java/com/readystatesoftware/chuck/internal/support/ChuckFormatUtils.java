@@ -22,7 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckHttpHeader;
-import com.readystatesoftware.chuck.internal.data.ChuckHttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 
 import org.xml.sax.InputSource;
 
@@ -83,7 +83,7 @@ public class ChuckFormatUtils {
         }
     }
 
-    public static String getShareText(Context context, ChuckHttpTransaction transaction) {
+    public static String getShareText(Context context, HttpTransaction transaction) {
         String text = "";
         text += context.getString(R.string.chuck_url) + ": " + v(transaction.getUrl()) + "\n";
         text += context.getString(R.string.chuck_method) + ": " + v(transaction.getMethod()) + "\n";
@@ -118,7 +118,7 @@ public class ChuckFormatUtils {
         return text;
     }
 
-    public static String getShareCurlCommand(ChuckHttpTransaction transaction) {
+    public static String getShareCurlCommand(HttpTransaction transaction) {
         boolean compressed = false;
         String curlCmd = "curl";
         curlCmd += " -X " + transaction.getMethod();
