@@ -21,11 +21,10 @@ import com.google.gson.reflect.TypeToken;
 import com.readystatesoftware.chuck.internal.support.ChuckFormatUtils;
 import com.readystatesoftware.chuck.internal.support.ChuckJsonConverter;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import nl.qbusict.cupboard.annotation.Index;
 import okhttp3.Headers;
@@ -38,7 +37,7 @@ public class HttpTransaction {
         Failed
     }
 
-    public static final String[] PARTIAL_PROJECTION = new String[] {
+    public static final String[] PARTIAL_PROJECTION = new String[]{
             "_id",
             "requestDate",
             "tookMs",
@@ -52,10 +51,11 @@ public class HttpTransaction {
             "responseContentLength"
     };
 
-    private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss", Locale.US);
+    private static final DateFormat TIME_FORMAT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);// new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     private Long _id;
-    @Index private Date requestDate;
+    @Index
+    private Date requestDate;
     private Date responseDate;
     private Long tookMs;
 
@@ -297,7 +297,7 @@ public class HttpTransaction {
     }
 
     public String getRequestStartTimeString() {
-        return (requestDate != null) ? TIME_ONLY_FMT.format(requestDate) : null;
+        return (requestDate != null) ? TIME_FORMAT.format(requestDate) : null;
     }
 
     public String getRequestDateString() {
@@ -309,12 +309,13 @@ public class HttpTransaction {
     }
 
     public String getDurationString() {
-        return (tookMs != null) ? + tookMs + " ms" : null;
+        return (tookMs != null) ? +tookMs + " ms" : null;
     }
 
     public String getRequestSizeString() {
         return formatBytes((requestContentLength != null) ? requestContentLength : 0);
     }
+
     public String getResponseSizeString() {
         return (responseContentLength != null) ? formatBytes(responseContentLength) : null;
     }

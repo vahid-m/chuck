@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.ObjectsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,16 +81,19 @@ public class ChuckTransactionPayloadFragment extends Fragment implements Transac
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        isLoaded = false;
-    }
+    private int lastHash;
 
     @Override
     public void transactionUpdated(HttpTransaction transaction) {
         this.transaction = transaction;
         populateUI();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isLoaded = false;
+        lastHash = 0;
     }
 
     private void populateUI() {
@@ -106,12 +110,16 @@ public class ChuckTransactionPayloadFragment extends Fragment implements Transac
                             ? transaction.getResponseBody() : getString(R.string.chuck_body_omitted);
                     break;
             }
+            int hash = ObjectsCompat.hash(headers, raw);
             if (isLoaded) {
-                webView.reload();
+                if (lastHash != hash) {
+                    webView.reload();
+                }
             } else {
                 webView.loadUrl("file:///android_asset/json_viewer.html");
                 isLoaded = true;
             }
+            lastHash = hash;
         }
     }
 

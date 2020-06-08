@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 1.2.3 *(2020-06-08)*
+----------------------------
+
+ * Fix: UI change for every database change.
+ * Feature: Share as link (with [dogbin](https://del.dog/about.md))
+ ![Share as link](assets/dogbin.webp)
+
 Version 1.1.0 *(2017-08-06)*
 ----------------------------
 

@@ -72,7 +72,7 @@
 
         <TextView
             android:id="@+id/start"
-            android:layout_width="72dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dp"
             tools:text="18:29:07" />

@@ -6,7 +6,7 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    archivesBaseName = "chuck"
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         consumerProguardFiles 'proguard-rules.pro'
@@ -15,7 +15,7 @@ android {
 
 dependencies {
     compileOnly 'com.google.code.gson:gson:2.8.5'
-    compileOnly "com.squareup.okhttp3:okhttp:$okhttp3Version"
+    api "com.squareup.okhttp3:okhttp:$okhttp3Version"
     api 'nl.qbusict:cupboard:2.2.0'
     api "com.android.support:design:$supportLibVersion"
 }

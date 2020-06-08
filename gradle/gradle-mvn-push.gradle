@@ -1,7 +1,7 @@
 
-def build = 2
+def build = 3
 group = 'com.github.RomanTsarou'
-version = "1.1.$build"
+version = "1.2.$build-SHAPSHOT"
 
 
 // build a jar with source files

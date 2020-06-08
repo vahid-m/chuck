@@ -15,6 +15,7 @@
  */
 package com.readystatesoftware.chuck.internal.ui;
 
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
@@ -42,8 +44,19 @@ import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.support.ChuckFormatUtils;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_REQUEST;
 import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_RESPONSE;
@@ -112,6 +125,9 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
         } else if (item.getItemId() == R.id.share_curl) {
             share(ChuckFormatUtils.getShareCurlCommand(transaction));
             return true;
+        } else if (item.getItemId() == R.id.share_link) {
+            shareLink(ChuckFormatUtils.getShareText(this, transaction));
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -165,6 +181,52 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
         sendIntent.putExtra(Intent.EXTRA_TEXT, content);
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, null));
+    }
+
+    private void shareLink(final String content) {
+        final ProgressDialog progress = ProgressDialog.show(this, null, "Create link...", true, false);
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.dismiss();
+                        Toast.makeText(getApplicationContext(), "Create link error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                progress.dismiss();
+                try {
+                    if (!response.isSuccessful()) {
+                        throw new IOException(response.message());
+                    }
+                    JSONObject body = new JSONObject(response.body().string());
+                    String key = body.getString("key");
+                    share("https://del.dog/" + key);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Create link error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        try {
+            JSONObject body = new JSONObject();
+            body.put("content", content);
+            Request request = new Request.Builder()
+                    .url("https://del.dog/documents")
+                    .post(RequestBody.create(MediaType.parse("application/json"), body.toString()))
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(callback);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     static class Adapter extends FragmentPagerAdapter {

@@ -28,7 +28,7 @@ repositories {
 }
 
  dependencies {
-   debugImplementation 'com.github.RomanTsarou:chuck:1.1.2'
+   debugImplementation 'com.github.RomanTsarou:chuck:1.2.3'
  }
 ```
 
