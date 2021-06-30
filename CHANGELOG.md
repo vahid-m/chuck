@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.2.4 *(2021-06-30)*
+----------------------------
+
+ * Fix: display json null values
+ * Share as link (with [katbin](https://katb.in/))
+
 Version 1.2.3 *(2020-06-08)*
 ----------------------------
 

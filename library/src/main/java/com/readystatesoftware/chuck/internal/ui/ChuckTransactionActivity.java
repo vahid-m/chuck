@@ -206,8 +206,8 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
                         throw new IOException(response.message());
                     }
                     JSONObject body = new JSONObject(response.body().string());
-                    String key = body.getString("key");
-                    share("https://del.dog/" + key);
+                    String key = body.getString("paste_id");
+                    share("https://katb.in/" + key);
                 } catch (Throwable e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Create link error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -218,7 +218,7 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
             JSONObject body = new JSONObject();
             body.put("content", content);
             Request request = new Request.Builder()
-                    .url("https://del.dog/documents")
+                    .url("https://api.katb.in/api/paste")
                     .post(RequestBody.create(MediaType.parse("application/json"), body.toString()))
                     .build();
             Call call = client.newCall(request);
