@@ -1,16 +1,21 @@
 Change Log
 ==========
 
+Version 1.2.5 *(2021-11-26)*
+----------------------------
+
+* Share as link (with [pastebin](https://pastebin.com/))
+
 Version 1.2.4 *(2021-06-30)*
 ----------------------------
 
- * Fix: display json null values
- * Share as link (with [katbin](https://katb.in/))
+* Fix: display json null values
+* Share as link (with [katbin](https://katb.in/))
 
 Version 1.2.3 *(2020-06-08)*
 ----------------------------
 
- * Fix: UI change for every database change.
+* Fix: UI change for every database change.
  * Feature: Share as link (with [dogbin](https://del.dog/about.md))
  ![Share as link](assets/dogbin.webp)
 

@@ -15,6 +15,9 @@
  */
 package com.readystatesoftware.chuck.internal.ui;
 
+import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_REQUEST;
+import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_RESPONSE;
+
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -32,6 +35,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,22 +48,17 @@ import com.readystatesoftware.chuck.internal.data.ChuckLocalCupboard;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.support.ChuckFormatUtils;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_REQUEST;
-import static com.readystatesoftware.chuck.internal.ui.ChuckTransactionPayloadFragment.TYPE_RESPONSE;
 
 public class ChuckTransactionActivity extends ChuckBaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -203,29 +202,42 @@ public class ChuckTransactionActivity extends ChuckBaseActivity implements Loade
                 progress.dismiss();
                 try {
                     if (!response.isSuccessful()) {
+                        Log.e("Chuck", "Create link error: " + response);
                         throw new IOException(response.message());
                     }
-                    JSONObject body = new JSONObject(response.body().string());
-                    String key = body.getString("paste_id");
-                    share("https://katb.in/" + key);
+                    String url = response.body().string().replaceFirst("com/", "com/raw/");
+                    share(url);
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Create link error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Create link error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         };
         try {
-            JSONObject body = new JSONObject();
-            body.put("content", content);
+            RequestBody formBody = new FormBody.Builder()
+                    .add("api_dev_key", "1wKkohgQo_3e1ceW8gzEpWg8QXE0sMg0")
+                    .add("api_option", "paste")
+                    .add("api_paste_code", content)
+                    .build();
             Request request = new Request.Builder()
-                    .url("https://api.katb.in/api/paste")
-                    .post(RequestBody.create(MediaType.parse("application/json"), body.toString()))
+                    .url("https://pastebin.com/api/api_post.php")
+                    .post(formBody)
                     .build();
             Call call = client.newCall(request);
             call.enqueue(callback);
         } catch (Throwable e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Create link error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
