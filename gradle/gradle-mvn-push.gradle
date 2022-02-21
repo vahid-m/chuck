@@ -1,5 +1,5 @@
 
-def build = 5
+def build = 6
 group = 'com.github.RomanTsarou'
 version = "1.2.$build-SHAPSHOT"
 
